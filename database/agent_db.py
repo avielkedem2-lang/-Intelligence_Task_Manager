@@ -65,6 +65,8 @@ class AgentDB:
             return True
         except Exception as e:
             print(e)
+        finally:
+            self.db.cursor.close()
     
 
 
@@ -76,3 +78,38 @@ class AgentDB:
             return True
         except Exception as e:
             print(e)
+        finally:
+            self.db.cursor.close()
+    
+
+
+    def increment_failed(self, id):
+        try:
+            self.db.get_connection()
+            self.db.cursor.execute("UPDATE agents set failed_missions=failed_missions +1 WHERE id=%s",(id,))
+            self.db.connection.commit()
+            return True
+        except Exception as e:
+            print(e)
+        finally:
+            self.db.cursor.close()
+
+
+
+    def get_agent_performance(self, id):
+        try:
+            conclusion_missions = {}
+            self.db.get_connection()
+            self.db.cursor.execute("SELECT completed_missions, failed_missions FROM agents WHERE id=%s",(id,))
+            missions = self.db.cursor.fetchone()
+            conclusion_missions["total"] = missions["completed_missions"] + missions["failed_missions"]
+            conclusion_missions["failed"] = missions["failed_missions"]
+            conclusion_missions["completed"] = missions["completed_missions"]
+            conclusion_missions["success_rate"] = (missions["completed_missions"] / conclusion_missions["total"]) * 100
+            return conclusion_missions 
+        except Exception as e:
+            print(e)
+        finally:
+            self.db.cursor.close() 
+
+
