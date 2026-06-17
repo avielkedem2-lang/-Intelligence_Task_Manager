@@ -49,8 +49,30 @@ class AgentDB:
             self.db.cursor.execute("UPDATE agents SET name=%s, specialty=%s , agent_rank=%s WHERE id=%s",
                                    (data["name"], data["specialty"], data["agent_rank"], id))
             self.db.connection.commit()
-            return self.db.cursor.fetchone()
+            return True
         except Exception as e:
             print(e)
         finally:
             self.db.cursor.close()
+    
+
+
+    def deactivate_agent(self, id):
+        try:
+            self.db.get_connection()
+            self.db.cursor.execute("UPDATE agents set is_active=FALSE WHERE id=%s", (id,))
+            self.db.connection.commit()
+            return True
+        except Exception as e:
+            print(e)
+    
+
+
+    def increment_completed(self, id):
+        try:
+            self.db.get_connection()
+            self.db.cursor.execute("UPDATE agents set completed_missions=completed_missions +1 WHERE id=%s",(id,))
+            self.db.connection.commit()
+            return True
+        except Exception as e:
+            print(e)
