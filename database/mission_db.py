@@ -69,4 +69,58 @@ class MissionDB:
         finally:
             self.db.cursor.close()
 
+
+
+    def count_all_missions(self):
+        try:
+            self.db.get_connection()
+            self.db.cursor.execute("SELECT COUNT(*) as total_missions FROM missions")
+            return self.db.cursor.fetchone()
+        except Exception as e:
+            print(e)
+        finally:
+            self.db.cursor.close()
+    
+
+    def status_by_count(self,status):
+        try:
+            self.db.get_connection()
+            self.db.cursor.execute("SELECT COUNT(status) FROM missions WHERE status=%s", (status,))
+            return self.db.cursor.fetchone()
+        except Exception as e:
+            print(e)
+        finally:
+            self.db.cursor.close()
+    
+
+    def count_open_missions(self):
+        try:
+            self.db.get_connection()
+            self.db.cursor.execute("SELECT COUNT(status) as sam_open_missions FROM missions WHERE status='NEW' OR status = 'ASSIGNED' OR status='PROGRESS_IN'")
+            return self.db.cursor.fetchone()
+        except Exception as e:
+            print(e)
+        finally:
+            self.db.cursor.close()
+    
+
+    def count_critical_missions(self):
+        try:
+            self.db.get_connection()
+            self.db.cursor.execute("SELECT COUNT(risk_level) FROM missions WHERE risk_level='CRITICAL';")
+            return self.db.cursor.fetchone()
+        except Exception as e:
+            print(e)
+        finally:
+            self.db.cursor.close()
+    
+
+    def get_top_agent(self):
+        try:
+            self.db.get_connection()
+            self.db.cursor.execute("")
+        except Exception as e:
+            print(e)
+        finally:
+            self.db.cursor.close()
         
