@@ -1,7 +1,7 @@
 import mysql.connector
 
 
-class DB_connection:
+class DBConnection:
     def __init__(self):
         self.config = {
             "host": "127.0.0.1",
@@ -35,17 +35,17 @@ class DB_connection:
                                 is_active BOOLEAN DEFAULT TRUE,
                                 completed_missions INT DEFAULT 0,
                                 failed_missions INT DEFAULT 0,
-                                agent_rank ENUM('Junior','Senior','Commander') DEFAULT 'Junior')
+                                agent_rank ENUM('Junior','Senior','Commander'))
                                 ;""")
             
 
             self.cursor.execute("""CREATE TABLE missions(
                                 id INT AUTO_INCREMENT PRIMARY KEY,
-                                title VARCHAR(50),
-                                description TEXT,
-                                location VARCHAR(50),
-                                difficulty INT,
-                                importance INT,
+                                title VARCHAR(50) not null,
+                                description TEXT not null,
+                                location VARCHAR(50) not null,
+                                difficulty INT(10) not null,
+                                importance INT(10) not null,
                                 status VARCHAR(50) DEFAULT 'NEW',
                                 risk_level VARCHAR(50),
                                 assigned_agent_id int DEFAULT NULL 
