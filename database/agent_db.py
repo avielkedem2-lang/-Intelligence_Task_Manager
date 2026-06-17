@@ -113,3 +113,13 @@ class AgentDB:
             self.db.cursor.close() 
 
 
+    def count_active_agent(self):
+        try:
+            self.db.get_connection()
+            self.db.cursor.execute("SELECT COUNT(*) as active_agents FROM agents WHERE is_active=1")
+            return self.db.cursor.fetchone()
+        except Exception as e:
+            print(e)
+        finally:
+            self.db.cursor.close()
+
