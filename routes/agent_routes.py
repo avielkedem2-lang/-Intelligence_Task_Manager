@@ -16,3 +16,12 @@ def create_agent(data:Agent):
 
 
 
+@router.get("/")
+def get_agents():
+    return agent.get_all_agents()
+
+
+
+@router.get("/{id}")
+def get_agent(id):
+    return chicke_id(id)
