@@ -42,3 +42,15 @@ def create_risk_level(data):
         data["risk_level"] = "LOW"
     
     return mission.create_mission(data)
+
+
+
+def checke_id(id):
+    try:
+        id = int(id)
+    except:
+        raise HTTPException(422, "The id most to be int")
+    mission_data = mission.get_mission_by_id(id)
+    if mission_data:
+        return True
+    raise HTTPException(404,f"id= {id} not fond")
