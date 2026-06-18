@@ -25,3 +25,36 @@ def get_agents():
 @router.get("/{id}")
 def get_agent(id):
     return chicke_id(id)
+
+
+
+@router.put("/{id}")
+def update_agent(id, data:Agent):
+    id_chicke = chicke_id(id)
+    if id_chicke:
+        data = dict(data)
+        agent_rank = data["agent_rank"]
+        chicke_rank = chicke_agent_rank(agent_rank, data)
+        if chicke_rank:
+            return agent.update_agent(id, data)
+        return chicke_rank
+    return id_chicke
+
+
+
+
+@router.put("/{id}/deactivate")
+def deactivate_agent(id):
+    id_chicke = chicke_id(id)
+    if id_chicke:
+        return agent.deactivate_agent(id)
+    return id_chicke
+
+
+
+@router.put("/{id}/performance")
+def performance_agent(id):
+    id_chicke = chicke_id(id)
+    if id_chicke:
+        return agent.get_agent_performance(id)
+    return id_chicke

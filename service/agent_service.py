@@ -17,7 +17,7 @@ class Agent(BaseModel):
 def chicke_agent_rank(agent_rank, data):
     if agent_rank not in ["Junior", "Senior", "Commander"]:
         raise HTTPException(400,f"The agent_rank={agent_rank} not good!")
-    return agent.create_agent(data)
+    return True
 
 
 
@@ -31,4 +31,7 @@ def chicke_id(id):
     if agent_data:
         return agent_data
     raise HTTPException(404,f"id= {id} not fond")
+
+
+
     
