@@ -29,7 +29,7 @@ class DBConnection:
     def create_tables(self):
         try:
             self.get_connection()
-            self.cursor.execute("""CREATE TABLE agents(id INT AUTO_INCREMENT PRIMARY KEY,
+            self.cursor.execute("""CREATE TABLE if not exists agents(id INT AUTO_INCREMENT PRIMARY KEY,
                                 name VARCHAR(50) not null,
                                 specialty VARCHAR(100) not null,
                                 is_active BOOLEAN DEFAULT TRUE,
@@ -39,7 +39,7 @@ class DBConnection:
                                 ;""")
             
 
-            self.cursor.execute("""CREATE TABLE missions(
+            self.cursor.execute("""CREATE TABLE if not exists  missions(
                                 id INT AUTO_INCREMENT PRIMARY KEY,
                                 title VARCHAR(50) not null,
                                 description TEXT not null,

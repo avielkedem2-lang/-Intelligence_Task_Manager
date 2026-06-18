@@ -1,4 +1,7 @@
 from database.db_connection import DBConnection
+from database.mission_db import MissionDB
+
+mis = MissionDB()
 
 
 class AgentDB:
@@ -11,6 +14,7 @@ class AgentDB:
             self.db.cursor.execute("insert into agents(name, specialty, agent_rank) values (%s, %s, %s)",
                                    (data["name"], data["specialty"], data["agent_rank"]))
             self.db.connection.commit()
+            self.db.cursor.execute("select * FROM agents ORDER BY id DESC LIMIT 1")
             return self.db.cursor.fetchone()
         except Exception as e:
             print(e)
@@ -49,7 +53,7 @@ class AgentDB:
             self.db.cursor.execute("UPDATE agents SET name=%s, specialty=%s , agent_rank=%s WHERE id=%s",
                                    (data["name"], data["specialty"], data["agent_rank"], id))
             self.db.connection.commit()
-            return True
+            return {"seuccess": True}
         except Exception as e:
             print(e)
         finally:
@@ -102,10 +106,14 @@ class AgentDB:
             self.db.get_connection()
             self.db.cursor.execute("SELECT completed_missions, failed_missions FROM agents WHERE id=%s",(id,))
             missions = self.db.cursor.fetchone()
-            conclusion_missions["total"] = missions["completed_missions"] + missions["failed_missions"]
+            self.db.cursor.execute("SELECT COUNT(assigned_agent_id) FROM missions WHERE id=%s", (id,))
+            conclusion_missions["total"] = self.db.cursor.fetchone()
             conclusion_missions["failed"] = missions["failed_missions"]
             conclusion_missions["completed"] = missions["completed_missions"]
             conclusion_missions["success_rate"] = (missions["completed_missions"] / conclusion_missions["total"]) * 100
+            return conclusion_missions
+        except ZeroDivisionError:
+            conclusion_missions["success_rate"] = 0
             return conclusion_missions 
         except Exception as e:
             print(e)

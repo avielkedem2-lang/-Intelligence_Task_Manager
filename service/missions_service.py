@@ -1,9 +1,10 @@
 from pydantic import BaseModel, Field
 from database.mission_db import MissionDB
+from database.agent_db import AgentDB
 from fastapi import HTTPException
 
 mission = MissionDB()
-
+agent = AgentDB()
 
 
 
@@ -54,3 +55,55 @@ def checke_id(id):
     if mission_data:
         return True
     raise HTTPException(404,f"id= {id} not fond")
+
+
+
+
+def checke_status(id):
+    if mission.get_mission_by_id(id)["status"] == "NEW":
+        return True
+    raise HTTPException(400, "The status most to be NEW")
+
+
+def checke_is_active(id):
+    if agent.get_agent_by_id(id)["is_active"] == 1:
+        return True
+    raise HTTPException(400, "The agent mast to be active")
+
+
+
+def checke_rank(id, agent_id):
+    if mission.get_mission_by_id(id)["risk_level"] == "CRITICAL":
+        if agent.get_agent_by_id(agent_id)["agent_rank"] == "Commander":
+            return True
+        return HTTPException(400, "The agent nost to be Commander becase it is CRITICAL")
+    return True
+
+
+
+
+def checks_associated(id):
+    if mission.get_mission_by_id(id)["assigned_agent_id"]:
+        return True
+    raise HTTPException(400, "The mission not associat to no bady")
+
+def is_assigned(id):
+    if mission.get_mission_by_id(id)["status"] == "ASSIGNED":
+        return True
+    raise HTTPException(400, "The mission not on ASSIGNED")
+
+
+
+
+def is_in_progress(id):
+    if mission.get_mission_by_id(id)["status"] == "IN_PROGRESS":
+        return True
+    raise HTTPException(400, "The mission not on IN_PROGRESS")
+
+
+
+
+def to_cancel(id):
+    if mission.get_mission_by_id(id)["status"] == "NEW" or mission.get_mission_by_id(id)["status"] == "ASSIGNED":
+        return True
+    raise HTTPException(400, "The mission not on NEW OR ASSIGNED")

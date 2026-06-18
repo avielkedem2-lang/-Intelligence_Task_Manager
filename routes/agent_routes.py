@@ -12,7 +12,10 @@ router = APIRouter(prefix="/agents",tags=["agents"])
 def create_agent(data:Agent):
     data = dict(data)
     agent_rank = data["agent_rank"]
-    return chicke_agent_rank(agent_rank,data)
+    chicke_rank = chicke_agent_rank(agent_rank, data)
+    if chicke_rank:
+        return agent.create_agent(data)
+    return chicke_rank
 
 
 
